@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"net/http"
 )
 
@@ -11,12 +12,15 @@ type HttpHandler struct{}
 //Implement `ServerHTTP` method on 'HttpHandler' struct
 func (h HttpHandler) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 
-	//Create response binary data
-	data := []byte("Hello World!") //slice of bytes
+	//Write 'Hello' using 'io.WriteString' function
+	io.WriteString(res, "Hello")
 
-	//Write `data` to response
-	res.Write(data)
-	fmt.Print(*req)
+	//Write 'World' using 'fmt.Fprint' function
+	fmt.Fprint(res, " World! ")
+
+	//Write `❤️` using simple `Write` call
+	res.Write([]byte("❤️"))
+	res.Write([]byte("  Bye World!"))
 }
 
 func main() {
