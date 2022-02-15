@@ -13,12 +13,21 @@ func main() {
 
 	//handle `/` route to `http.DefaultServerMux`
 	http.HandleFunc("/", func(res http.ResponseWriter, req *http.Request) {
-		fmt.Fprint(res, "Hello World!")
-	})
 
-	//handle '/hello/golang' route to `http.DefaultServerMux`
-	http.HandleFunc("/hello/golang", func(res http.ResponseWriter, req *http.Request) {
-		fmt.Fprint(res, "Hello Golang!")
+		//get response headers
+		header := res.Header()
+
+		//set content type header
+		header.Set("Content-type", "application/json")
+
+		//reset data header (inline call)
+		res.Header().Set("Data", "01/01/2022")
+
+		//set status header
+		res.WriteHeader(http.StatusBadRequest) // http.StatusBadRequest == 400
+
+		//respond with a JSON string
+		fmt.Fprint(res, `{"status":"FAILURE"}`)
 	})
 
 	//Listen and serve using `http.DefaultServerMux`
