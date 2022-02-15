@@ -2,31 +2,26 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"net/http"
 )
 
-//Create handler struct
-type HttpHandler struct{}
-
-//Implement `ServerHTTP` method on 'HttpHandler' struct
-func (h HttpHandler) ServeHTTP(res http.ResponseWriter, req *http.Request) {
-
-	//Write 'Hello' using 'io.WriteString' function
-	io.WriteString(res, "Hello")
-
-	//Write 'World' using 'fmt.Fprint' function
-	fmt.Fprint(res, " World! ")
-
-	//Write `❤️` using simple `Write` call
-	res.Write([]byte("❤️"))
-	res.Write([]byte("  Bye World!"))
-}
+//The problem with ServeHTTP method of HttpHandler is that is responds to all the request.
+//ServeMux can accept a function for a specific route and when incoming request URL matches that route, that fubctuib will be executed.
 
 func main() {
-	//Create a new handler
-	handler := HttpHandler{}
+	//Create a new `ServeMux`
+	mux := http.NewServeMux()
 
-	//listen and serve
-	http.ListenAndServe(":80", handler)
+	//handle `/` route
+	mux.HandleFunc("/", func(res http.ResponseWriter, req *http.Request) {
+		fmt.Fprint(res, "Hello World!")
+	})
+
+	//handle '/hello/golang' route
+	mux.HandleFunc("/hello/golang", func(res http.ResponseWriter, req *http.Request) {
+		fmt.Fprint(res, "Hello Golang!")
+	})
+
+	//Listen and serve using `ServeMux`
+	http.ListenAndServe(":80", mux)
 }
