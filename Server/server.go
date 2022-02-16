@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"net/http"
 )
 
@@ -8,8 +9,10 @@ import (
 type HttpHandler struct {
 }
 
-func (h HttpHandler) ServeHTTP(res http.ResponseWriter, req *http.Request) {
-
+//Create Reg structure for save date about registration user
+//We have one field -> username
+type RegUser struct {
+	Username string `json:"username"` // In json file we'll use variable name -> Username
 }
 
 func main() {
@@ -27,7 +30,22 @@ func main() {
 
 	//Handle '/reg'
 	mux.HandleFunc("/reg", func(res http.ResponseWriter, req *http.Request) {
-		res.Write([]byte("Welcome to registration!"))
+		//Create user type of RegUser
+		var user RegUser
+
+		//Read Json file body and write to user structure
+		err := json.NewDecoder(req.Body).Decode(&user)
+
+		//Check Decode
+		if err != nil {
+			res.Write([]byte("Server: We didn't read your JSON file. Try later..."))
+			return
+		}
+
+		//Respond message to user
+		msg := "Welcome, " + user.Username
+		res.Write([]byte(msg))
+
 	})
 
 	//Start server
