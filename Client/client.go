@@ -17,9 +17,9 @@ var cmd string
 //Global variable of type string for save current user
 var currentUser string
 
-//Create Reg structure for save data about registration user
+//Create User structure for save data about registration user
 //We have one field -> username
-type RegUser struct {
+type User struct {
 	Username string `json:"username"` // In json file we'll use variable name -> Username
 }
 
@@ -53,7 +53,7 @@ func userInput() {
 //Registration a new user
 func reg() {
 	//Create object type of RegUser
-	var user RegUser
+	var user User
 
 	//Get a new user name for registration
 	fmt.Print("Input a new user name: ")
@@ -134,6 +134,9 @@ func send() {
 		sendUser.Sender = currentUser
 	}
 
+	//Save current user
+	currentUser = sendUser.Sender
+
 	//Get Reciever
 	fmt.Print("Input whom you want to send: ")
 	fmt.Scan(&sendUser.Reciever)
@@ -173,6 +176,54 @@ func send() {
 	log.Println(string(body))
 }
 
+//Get user message
+func getMsg() {
+	//Create object of type User structure
+	var user User
+
+	//Check user, we have current user or not
+	if currentUser == "" {
+		//Get the name user
+		fmt.Print("Input your name: ")
+		fmt.Scan(&user.Username)
+	} else {
+		//Set current user to sender
+		user.Username = currentUser
+	}
+
+	//Save current user
+	currentUser = user.Username
+
+	//Convert struct to json type
+	postBody, _ := json.Marshal(user)
+
+	//Convert to *bytes.Buffer and initialization
+	responseBody := bytes.NewBuffer(postBody)
+
+	//Send request to server
+	resp, err := http.Post("http://localhost:80/get", "application/json", responseBody)
+
+	//Check require
+	if err != nil {
+		fmt.Println("Sorry, We didn't send your request. Try later...")
+		return
+	}
+	//We close the require. Defer - works at the last
+	defer resp.Body.Close()
+
+	//Read the responce body
+	body, err := ioutil.ReadAll(resp.Body)
+
+	//Check responce body
+	if err != nil {
+		fmt.Println("Sorry, We didn't read responce to your reqest. Try later...")
+		return
+	}
+
+	//Print responce
+	log.Println(string(body))
+
+}
 func main() {
 
 	//Header about chat
@@ -199,7 +250,7 @@ func main() {
 
 		case "get":
 			//Get all my messages
-
+			getMsg()
 		case "exit":
 			//Close the program
 			fmt.Println("Good Bye! See you soon...")

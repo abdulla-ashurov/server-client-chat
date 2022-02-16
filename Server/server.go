@@ -11,7 +11,7 @@ type HttpHandler struct {
 
 //Create Reg structure for save date about registration user
 //We have one field -> username
-type RegUser struct {
+type User struct {
 	Username string `json:"username"` // In json file we'll use variable name -> Username
 }
 
@@ -34,7 +34,7 @@ var messages = map[string][]SendUser{}
 //function registration
 func reg(res http.ResponseWriter, req *http.Request) {
 	//Create user type of RegUser
-	var user RegUser
+	var user User
 
 	//Read Json file body and write to user structure
 	err := json.NewDecoder(req.Body).Decode(&user)
@@ -91,6 +91,11 @@ func send(res http.ResponseWriter, req *http.Request) {
 	/*for key, value := range messages {
 		fmt.Println(key, value)
 	}*/
+}
+
+//Get user Message
+func getMsg() {
+
 }
 
 func main() {
