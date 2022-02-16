@@ -5,6 +5,12 @@ import (
 	"net/http"
 )
 
+//Global map for save users
+var users map[string]uint
+
+//Count for id users
+var id uint = 0
+
 //Create handler structure without fields
 type HttpHandler struct {
 }
@@ -46,6 +52,9 @@ func main() {
 		msg := "Welcome, " + user.Username + "!"
 		res.Write([]byte(msg))
 
+		//Save a new user in Map
+		users[user.Username] = id
+		id++
 	})
 
 	//Start server
