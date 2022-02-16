@@ -1,13 +1,20 @@
 package main
 
-import "fmt"
+import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"log"
+	"net/http"
+)
 
 //Global for get user's command
 var cmd string
 
 //Create Reg structure for save date about registration user
 //We have one field -> username
-type Reg struct {
+type RegUser struct {
 	username string `json:"Username"` // In json file we'll use variable name -> Username
 }
 
@@ -31,6 +38,45 @@ func userInput() {
 	fmt.Scan(&cmd)
 }
 
+//Registration a new user
+func reg() {
+	//Create object type of RegUser
+	var user RegUser
+
+	//Get a new user name for registration
+	fmt.Print("Input a new user name: ")
+	fmt.Scan(&user.username)
+
+	//Convert struct to json type
+	postBody, _ := json.Marshal(user)
+
+	//Convert to bytes and initialization
+	responseBody := bytes.NewBuffer(postBody)
+
+	//Send request to server
+	resp, err := http.Post("http://localhost:80", "application/json", responseBody)
+
+	//Check require
+	if err != nil {
+		fmt.Println("Sorry, We didn't send your request. Try later...")
+		return
+	}
+	//We close the require. Defer - works at the last
+	defer resp.Body.Close()
+
+	//Read th responce body
+	body, err := ioutil.ReadAll(resp.Body)
+
+	//Check responce body
+	if err != nil {
+		fmt.Println("Sorry, We didn't read responce to your reqest. Try later...")
+		return
+	}
+
+	//Print responce
+	log.Print(string(body))
+}
+
 func main() {
 
 	//Header about chat
@@ -45,6 +91,9 @@ func main() {
 			//Print Information about commands
 			menu()
 
+		case "reg":
+			//Registration user
+			reg()
 		case "all":
 			//Print all users
 
