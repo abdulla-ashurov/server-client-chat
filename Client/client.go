@@ -76,7 +76,7 @@ func reg() {
 	}
 
 	//Print responce
-	log.Print(string(body))
+	log.Println(string(body))
 }
 
 //Get all users
@@ -102,7 +102,7 @@ func getAll() {
 	}
 
 	//Print responce
-	log.Print(string(body))
+	log.Println(string(body))
 
 }
 
