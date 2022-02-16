@@ -5,12 +5,6 @@ import (
 	"net/http"
 )
 
-//Global map for save users
-var users = map[string]uint{}
-
-//Count for id users
-var id uint = 1
-
 //Create handler structure without fields
 type HttpHandler struct {
 }
@@ -20,6 +14,22 @@ type HttpHandler struct {
 type RegUser struct {
 	Username string `json:"username"` // In json file we'll use variable name -> Username
 }
+
+//Create SendUser structure for save data about Sendler
+type SendUser struct {
+	Sender   string `json:"sender"`
+	Reciever string `json:"reciever"`
+	Message  string `json:"message"`
+}
+
+//Global map for save users
+var users = map[string]uint{}
+
+//Count for id users
+var id uint = 1
+
+//Global map for save messages
+var messages = map[string][]SendUser{}
 
 //function registration
 func reg(res http.ResponseWriter, req *http.Request) {
@@ -55,6 +65,34 @@ func all(res http.ResponseWriter, req *http.Request) {
 	}
 }
 
+//Send message
+func send(res http.ResponseWriter, req *http.Request) {
+	//Create object of type SendUser
+	var sendUser SendUser
+
+	//Read json file body and write to user structure
+	err := json.NewDecoder(req.Body).Decode(&sendUser)
+
+	//Check Decode
+	if err != nil {
+		res.Write([]byte("Server: We didn't read your JSON file. Try later..."))
+		return
+	}
+
+	//Save user message in Map
+	toKey := SendUser{
+		Sender:   sendUser.Sender,
+		Reciever: sendUser.Reciever,
+		Message:  sendUser.Message,
+	}
+	messages[sendUser.Sender] = append([]SendUser{}, toKey)
+
+	//Test Output Map
+	/*for key, value := range messages {
+		fmt.Println(key, value)
+	}*/
+}
+
 func main() {
 	//Create a new `ServeMux`
 	//ServeMux can accept a function for a specific route and when incoming request
@@ -71,6 +109,9 @@ func main() {
 
 	//Handle '/all'
 	mux.HandleFunc("/all", all)
+
+	//Handle `/send`
+	mux.HandleFunc("/send", send)
 
 	//Start server
 	http.ListenAndServe(":80", mux)
