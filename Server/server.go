@@ -85,7 +85,7 @@ func send(res http.ResponseWriter, req *http.Request) {
 		Reciever: sendUser.Reciever,
 		Message:  sendUser.Message,
 	}
-	messages[sendUser.Sender] = append([]SendUser{}, toKey)
+	messages[sendUser.Reciever] = append([]SendUser{}, toKey)
 
 	//Test Output Map
 	/*for key, value := range messages {
@@ -94,8 +94,25 @@ func send(res http.ResponseWriter, req *http.Request) {
 }
 
 //Get user Message
-func getMsg() {
+func getMsg(res http.ResponseWriter, req *http.Request) {
+	//Create object of type User
+	var user User
 
+	//Read json file body and write to user structure
+	err := json.NewDecoder(req.Body).Decode(&user)
+
+	//Check Decode
+	if err != nil {
+		res.Write([]byte("Server: We didn't read your JSON file. Try later..."))
+		return
+	}
+
+	//Create array of type []SendUser
+	recievers := messages[user.Username]
+	for i := 0; i < len(recievers); i++ {
+		msg := recievers[i].Sender + ": " + recievers[i].Message
+		res.Write([]byte(msg + "\n"))
+	}
 }
 
 func main() {
@@ -117,6 +134,9 @@ func main() {
 
 	//Handle `/send`
 	mux.HandleFunc("/send", send)
+
+	//Handle `/get`
+	mux.HandleFunc("/get", getMsg)
 
 	//Start server
 	http.ListenAndServe(":80", mux)
