@@ -12,11 +12,13 @@ import (
 //Global for get user's command
 var cmd string
 
-//Create Reg structure for save date about registration user
+//Create Reg structure for save data about registration user
 //We have one field -> username
 type RegUser struct {
 	Username string `json:"username"` // In json file we'll use variable name -> Username
 }
+
+//Create AllUsers structure for save
 
 //Header about chat
 func intro() {
@@ -64,7 +66,7 @@ func reg() {
 	//We close the require. Defer - works at the last
 	defer resp.Body.Close()
 
-	//Read th responce body
+	//Read the responce body
 	body, err := ioutil.ReadAll(resp.Body)
 
 	//Check responce body
@@ -75,6 +77,33 @@ func reg() {
 
 	//Print responce
 	log.Print(string(body))
+}
+
+//Get all users
+func getAll() {
+	//Send get require
+	resp, err := http.Get("http://localhost:80/all")
+
+	//Check require
+	if err != nil {
+		fmt.Println("Sorry, We didn't send your request. Try later...")
+		return
+	}
+
+	//We close the require. Defer - works at the last
+	defer resp.Body.Close()
+
+	//Read the responce body
+	body, err := ioutil.ReadAll(resp.Body)
+
+	//Check responce body
+	if err != nil {
+		fmt.Println("Sorry, We didn't read responce to your request. Try later...")
+	}
+
+	//Print responce
+	log.Print(string(body))
+
 }
 
 func main() {
@@ -96,7 +125,7 @@ func main() {
 			reg()
 		case "all":
 			//Print all users
-
+			getAll()
 		case "send":
 			//Send message to some user
 
