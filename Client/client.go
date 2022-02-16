@@ -54,7 +54,7 @@ func reg() {
 	responseBody := bytes.NewBuffer(postBody)
 
 	//Send request to server
-	resp, err := http.Post("http://localhost:80", "application/json", responseBody)
+	resp, err := http.Post("http://localhost:80/reg", "application/json", responseBody)
 
 	//Check require
 	if err != nil {
