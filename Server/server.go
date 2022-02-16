@@ -61,7 +61,7 @@ func main() {
 	mux.HandleFunc("/all", func(res http.ResponseWriter, req *http.Request) {
 		//Print all users in map
 		res.Write([]byte("\n"))
-		for name, _ := range users {
+		for name := range users {
 			res.Write([]byte(name + "\n"))
 		}
 	})
