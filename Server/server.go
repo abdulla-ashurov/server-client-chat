@@ -43,7 +43,7 @@ func main() {
 		}
 
 		//Respond message to user
-		msg := "Welcome, " + user.Username
+		msg := "Welcome, " + user.Username + "!"
 		res.Write([]byte(msg))
 
 	})
