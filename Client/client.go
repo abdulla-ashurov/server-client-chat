@@ -15,7 +15,7 @@ var cmd string
 //Create Reg structure for save date about registration user
 //We have one field -> username
 type RegUser struct {
-	username string `json:"Username"` // In json file we'll use variable name -> Username
+	Username string `json:"username"` // In json file we'll use variable name -> Username
 }
 
 //Header about chat
@@ -45,7 +45,7 @@ func reg() {
 
 	//Get a new user name for registration
 	fmt.Print("Input a new user name: ")
-	fmt.Scan(&user.username)
+	fmt.Scan(&user.Username)
 
 	//Convert struct to json type
 	postBody, _ := json.Marshal(user)
