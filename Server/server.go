@@ -3,14 +3,13 @@ package main
 import (
 	"encoding/json"
 	"net/http"
-	"strconv"
 )
 
 //Global map for save users
-var users map[string]uint
+var users = map[string]uint{}
 
 //Count for id users
-var id uint = 0
+var id uint = 1
 
 //Create handler structure without fields
 type HttpHandler struct {
@@ -61,8 +60,9 @@ func main() {
 	//Handle '/all'
 	mux.HandleFunc("/all", func(res http.ResponseWriter, req *http.Request) {
 		//Print all users in map
-		for name, id := range users {
-			res.Write([]byte(strconv.Itoa(int(id)) + ") " + name))
+		res.Write([]byte("\n"))
+		for name, _ := range users {
+			res.Write([]byte(name + "\n"))
 		}
 	})
 
