@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 )
 
 //Global map for save users
@@ -55,6 +56,14 @@ func main() {
 		//Save a new user in Map
 		users[user.Username] = id
 		id++
+	})
+
+	//Handle '/all'
+	mux.HandleFunc("/all", func(res http.ResponseWriter, req *http.Request) {
+		//Print all users in map
+		for name, id := range users {
+			res.Write([]byte(strconv.Itoa(int(id)) + ") " + name))
+		}
 	})
 
 	//Start server
