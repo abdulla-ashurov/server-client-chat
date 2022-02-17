@@ -34,7 +34,7 @@ var messages = map[string][]SendUser{}
 //function registration
 func Reg(user User) bool {
 	//Check we have this user or haven't
-	if _, ok := users[user.Username]; ok {
+	if _, ok := users[user.Username]; ok || user.Username == "" {
 		return false
 	} else {
 		//Save a new user in Map
