@@ -58,7 +58,7 @@ func reg(res http.ResponseWriter, req *http.Request) {
 
 //Get all users
 func all(res http.ResponseWriter, req *http.Request) {
-
+	//Transition a new line
 	res.Write([]byte("\n"))
 
 	//If we haven't any one, we print message about it
@@ -118,9 +118,19 @@ func getMsg(res http.ResponseWriter, req *http.Request) {
 
 	//Create array of type []SendUser
 	recievers := messages[user.Username]
-	for i := 0; i < len(recievers); i++ {
-		msg := recievers[i].Sender + ": " + recievers[i].Message
-		res.Write([]byte(msg + "\n"))
+
+	//Check we have messages or not
+	if len(recievers) > 0 {
+		//Transition a new line
+		res.Write([]byte("\n"))
+
+		//Respond all messages
+		for i := 0; i < len(recievers); i++ {
+			msg := recievers[i].Sender + ": " + recievers[i].Message
+			res.Write([]byte(msg + "\n"))
+		}
+	} else {
+		res.Write([]byte("Empty"))
 	}
 }
 
