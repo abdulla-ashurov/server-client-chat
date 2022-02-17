@@ -1,7 +1,7 @@
 package unit_test
 
 import (
-	server "Networking/server/Functions"
+	server "CHAT_SERVER_CLIENT/server/Functions"
 	"fmt"
 	"strconv"
 	"testing"

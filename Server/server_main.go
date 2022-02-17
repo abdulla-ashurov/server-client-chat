@@ -1,7 +1,7 @@
 package main
 
 import (
-	server "Networking/server/Functions"
+	server "CHAT_SERVER_CLIENT/server/Functions"
 	"net/http"
 )
 
