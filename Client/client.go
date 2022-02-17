@@ -50,11 +50,7 @@ func userInput() {
 	fmt.Scan(&cmd)
 }
 
-//Registration a new user
-func reg() {
-	//Create object type of RegUser
-	var user User
-
+func regNewUser(user *User) {
 	//Get a new user name for registration
 	fmt.Print("Input a new user name: ")
 	fmt.Scan(&user.Username)
@@ -90,6 +86,20 @@ func reg() {
 
 	//Print responce
 	log.Println(string(body))
+}
+
+//Registration a new user
+func reg() {
+	//Create object type of RegUser
+	var user User
+
+	//Check user, we have current user or not
+	if currentUser == "" {
+		regNewUser(&user)
+	} else {
+		fmt.Println("You Signed Up! Your name:", currentUser)
+	}
+
 }
 
 //Get all users
@@ -129,13 +139,13 @@ func send() {
 		//Get the name user
 		fmt.Print("Input your name: ")
 		fmt.Scan(&sendUser.Sender)
+
+		//Save current user
+		currentUser = sendUser.Sender
 	} else {
 		//Set current user to sender
 		sendUser.Sender = currentUser
 	}
-
-	//Save current user
-	currentUser = sendUser.Sender
 
 	//Get Reciever
 	fmt.Print("Input whom you want to send: ")
@@ -186,13 +196,13 @@ func getMsg() {
 		//Get the name user
 		fmt.Print("Input your name: ")
 		fmt.Scan(&user.Username)
+
+		//Save current user
+		currentUser = user.Username
 	} else {
 		//Set current user to sender
 		user.Username = currentUser
 	}
-
-	//Save current user
-	currentUser = user.Username
 
 	//Convert struct to json type
 	postBody, _ := json.Marshal(user)
