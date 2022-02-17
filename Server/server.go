@@ -93,12 +93,13 @@ func send(res http.ResponseWriter, req *http.Request) {
 		Reciever: sendUser.Reciever,
 		Message:  sendUser.Message,
 	}
-	messages[sendUser.Reciever] = append([]SendUser{}, toKey)
 
-	//Test Output Map
-	/*for key, value := range messages {
-		fmt.Println(key, value)
-	}*/
+	//Check user we have or haven't
+	if _, ok := users[sendUser.Reciever]; ok {
+		messages[sendUser.Reciever] = append(messages[sendUser.Reciever], toKey)
+	} else {
+		res.Write([]byte(sendUser.Reciever + " is not in the chat"))
+	}
 }
 
 //Get user Message
