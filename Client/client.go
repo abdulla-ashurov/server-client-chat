@@ -190,11 +190,7 @@ func getMsg() {
 	//Check user, we have current user or not
 	if currentUser == "" {
 		//Get the name user
-		fmt.Print("Input your name: ")
-		fmt.Scan(&user.Username)
-
-		//Save current user
-		currentUser = user.Username
+		reg()
 	} else {
 		//Set current user to sender
 		user.Username = currentUser
