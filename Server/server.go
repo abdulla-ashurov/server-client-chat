@@ -32,7 +32,20 @@ var id uint = 1
 var messages = map[string][]SendUser{}
 
 //function registration
-func reg(res http.ResponseWriter, req *http.Request) {
+func reg(user *User) bool {
+	//Check we have this user or haven't
+	if _, ok := users[user.Username]; ok {
+		return false
+	} else {
+		//Save a new user in Map
+		users[user.Username] = id
+		id++
+		return true
+	}
+}
+
+//function registration
+func resReg(res http.ResponseWriter, req *http.Request) {
 	//Create user type of RegUser
 	var user User
 
@@ -45,15 +58,27 @@ func reg(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	//@TODO user maximum one time registration, add same users in map -> error
-
-	//Respond message to user
 	msg := "Welcome, " + user.Username + "!"
-	res.Write([]byte(msg))
 
-	//Save a new user in Map
-	users[user.Username] = id
-	id++
+	//registration user
+	if reg(&user) {
+		//Respond to server
+		res.Write([]byte(msg))
+	} else {
+		res.Write([]byte("Please use another nickname!"))
+	}
+}
+
+//Print all users
+func printAll() string {
+	//Save all users in string variable
+	allUsers := ""
+	for name := range users {
+		allUsers += name
+	}
+
+	//Return all users
+	return allUsers
 }
 
 //Get all users
@@ -63,14 +88,22 @@ func all(res http.ResponseWriter, req *http.Request) {
 
 	//If we haven't any one, we print message about it
 	if len(users) > 0 {
-		//Print all users in map
-		for name := range users {
-			res.Write([]byte(name + "\n"))
-		}
+		res.Write([]byte(printAll()))
 	} else {
 		res.Write([]byte("Nobody in chat right now. Try later..."))
 	}
 
+}
+
+func saveMsg(sendUser *SendUser) bool {
+	//Check user we have or haven't
+	if _, ok := users[sendUser.Reciever]; ok {
+		messages[sendUser.Reciever] = append(messages[sendUser.Reciever], *sendUser)
+		return true
+	} else {
+
+		return false
+	}
 }
 
 //Send message
@@ -87,18 +120,27 @@ func send(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	//Save user message in Map
-	toKey := SendUser{
-		Sender:   sendUser.Sender,
-		Reciever: sendUser.Reciever,
-		Message:  sendUser.Message,
-	}
-
-	//Check user we have or haven't
-	if _, ok := users[sendUser.Reciever]; ok {
-		messages[sendUser.Reciever] = append(messages[sendUser.Reciever], toKey)
+	if saveMsg(&sendUser) {
+		res.Write([]byte("OK"))
 	} else {
 		res.Write([]byte(sendUser.Reciever + " is not in the chat"))
+	}
+
+}
+
+func getMessages(recievers []SendUser) string {
+	//Check we have messages or not
+	msg := ""
+	if len(recievers) > 0 {
+		msg += "\n"
+		//Respond all messages
+		for i := 0; i < len(recievers); i++ {
+			msg += recievers[i].Sender + ": " + recievers[i].Message + "\n"
+		}
+		return msg
+	} else {
+		msg = "Empty"
+		return msg
 	}
 }
 
@@ -119,19 +161,8 @@ func getMsg(res http.ResponseWriter, req *http.Request) {
 	//Create array of type []SendUser
 	recievers := messages[user.Username]
 
-	//Check we have messages or not
-	if len(recievers) > 0 {
-		//Transition a new line
-		res.Write([]byte("\n"))
-
-		//Respond all messages
-		for i := 0; i < len(recievers); i++ {
-			msg := recievers[i].Sender + ": " + recievers[i].Message
-			res.Write([]byte(msg + "\n"))
-		}
-	} else {
-		res.Write([]byte("Empty"))
-	}
+	//Check message we have or haven't and print
+	res.Write([]byte(getMessages(recievers)))
 }
 
 func main() {
@@ -146,7 +177,7 @@ func main() {
 	})
 
 	//Handle '/reg'
-	mux.HandleFunc("/reg", reg)
+	mux.HandleFunc("/reg", resReg)
 
 	//Handle '/all'
 	mux.HandleFunc("/all", all)
