@@ -136,12 +136,8 @@ func send() {
 
 	//Check user, we have current user or not
 	if currentUser == "" {
-		//Get the name user
-		fmt.Print("Input your name: ")
-		fmt.Scan(&sendUser.Sender)
-
-		//Save current user
-		currentUser = sendUser.Sender
+		//Get the name user and save in server
+		reg()
 	} else {
 		//Set current user to sender
 		sendUser.Sender = currentUser
