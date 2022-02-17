@@ -58,11 +58,19 @@ func reg(res http.ResponseWriter, req *http.Request) {
 
 //Get all users
 func all(res http.ResponseWriter, req *http.Request) {
-	//Print all users in map
+
 	res.Write([]byte("\n"))
-	for name := range users {
-		res.Write([]byte(name + "\n"))
+
+	//If we haven't any one, we print message about it
+	if len(users) > 0 {
+		//Print all users in map
+		for name := range users {
+			res.Write([]byte(name + "\n"))
+		}
+	} else {
+		res.Write([]byte("Nobody in chat right now. Try later..."))
 	}
+
 }
 
 //Send message
