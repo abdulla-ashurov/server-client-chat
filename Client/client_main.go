@@ -1,7 +1,7 @@
 package main
 
 import (
-	client "CHAT_SERVER_CLIENT/client/Functions"
+	client "Chat_Server_Client/client/Functions"
 	"fmt"
 )
 
