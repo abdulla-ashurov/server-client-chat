@@ -32,13 +32,13 @@ var id uint = 1
 var messages = map[string][]SendUser{}
 
 //function registration
-func Reg(user User) bool {
+func Reg(user string) bool {
 	//Check we have this user or haven't
-	if _, ok := users[user.Username]; ok || user.Username == "" {
+	if _, ok := users[user]; ok{
 		return false
 	} else {
 		//Save a new user in Map
-		users[user.Username] = id
+		users[user] = id
 		id++
 		return true
 	}
@@ -61,7 +61,7 @@ func ResReg(res http.ResponseWriter, req *http.Request) {
 	msg := "Welcome, " + user.Username + "!"
 
 	//registration user
-	if Reg(user) {
+	if Reg(user.Username) {
 		//Respond to server
 		res.Write([]byte(msg))
 	} else {

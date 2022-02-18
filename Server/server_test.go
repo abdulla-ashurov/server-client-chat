@@ -3,24 +3,34 @@ package main
 import (
 	server "Chat_Server_Client/server/Functions"
 	"fmt"
-	"strconv"
 	"testing"
 )
 
-func regTest(t *testing.T) {
-	user := []server.User{
-		{Username: "Some"},
-		{Username: "Some"},
-		{Username: "Abdulla"},
-		{Username: "Some"},
+//Create structure for Test Regisration
+type RegUser struct {
+	User    string
+	Correct bool
+}
+
+func TestReg(t *testing.T) {
+
+	//Tests
+	dataCorrect := []RegUser{
+		{User: "Abdulla", Correct: true},
+		{User: "Ulfat", Correct: true},
+		{User: "Andrey", Correct: true},
+		{User: "Sasha", Correct: true},
+		{User: "Abdulla", Correct: false},
+		{User: "Ulfat", Correct: false},
 	}
 
-	count := 1
-	for _, value := range user {
-		if server.Reg(value) != true {
-			t.Errorf("Test " + strconv.Itoa(count) + ": Incorrect!")
+	//Check tests
+	for _, data := range dataCorrect {
+		if server.Reg(data.User) == data.Correct {
+			fmt.Println("OK!")
+		} else {
+			fmt.Println("Incorrect!")
 		}
 	}
 
-	fmt.Print(user)
 }
