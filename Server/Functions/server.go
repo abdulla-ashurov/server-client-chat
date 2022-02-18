@@ -54,18 +54,18 @@ func ResReg(res http.ResponseWriter, req *http.Request) {
 
 	//Check Decode
 	if err != nil {
-		res.Write([]byte("Server: We didn't read your JSON file. Try later..."))
+		res.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	msg := "Welcome, " + user.Username + "!"
+	//msg := "Welcome, " + user.Username + "!"
 
 	//registration user
 	if Reg(user.Username) {
 		//Respond to server
-		res.Write([]byte(msg))
+		res.WriteHeader(http.StatusOK)
 	} else {
-		res.Write([]byte("Please use another nickname!"))
+		res.WriteHeader(http.StatusBadRequest)
 	}
 }
 
@@ -90,7 +90,7 @@ func All(res http.ResponseWriter, req *http.Request) {
 	if len(users) > 0 {
 		res.Write([]byte(PrintAll()))
 	} else {
-		res.Write([]byte("Nobody in chat right now. Try later..."))
+		res.WriteHeader(http.StatusBadRequest)
 	}
 
 }
@@ -119,13 +119,13 @@ func Send(res http.ResponseWriter, req *http.Request) {
 	//Check Decode
 	if err != nil {
 		res.Write([]byte("Server: We didn't read your JSON file. Try later..."))
-		return
+		res.WriteHeader(http.StatusBadRequest)
 	}
 
 	if SaveMsg(&sendUser) {
-		res.Write([]byte("OK"))
+		res.WriteHeader(http.StatusOK)
 	} else {
-		res.Write([]byte(sendUser.Reciever + " is not in the chat"))
+		res.WriteHeader(http.StatusBadRequest)
 	}
 
 }
@@ -157,12 +157,17 @@ func GetMsg(res http.ResponseWriter, req *http.Request) {
 	//Check Decode
 	if err != nil {
 		res.Write([]byte("Server: We didn't read your JSON file. Try later..."))
+		res.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	//Create array of type []SendUser
-	recievers := messages[user.Username]
+	if value, ok := messages[user.Username]; ok {
+		res.WriteHeader(http.StatusOK)
+		res.Write([]byte(GetMessages(value)))
+	} else {
+		res.WriteHeader(http.StatusBadRequest)
+	}
+	//recievers := messages[user.Username]
 
-	//Check message we have or haven't and print
-	res.Write([]byte(GetMessages(recievers)))
 }
