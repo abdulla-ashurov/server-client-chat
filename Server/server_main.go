@@ -6,6 +6,7 @@ import (
 )
 
 func main() {
+
 	//Create a new `ServeMux`
 	//ServeMux can accept a function for a specific route and when incoming request
 	//URL mathces that route, that will be executed
@@ -17,17 +18,18 @@ func main() {
 	})
 
 	//Handle '/reg'
-	mux.HandleFunc("/reg", server.ResReg)
+	mux.HandleFunc("/reg", server.RespondRegistration)
 
 	//Handle '/all'
-	mux.HandleFunc("/all", server.All)
+	mux.HandleFunc("/all", server.RespondAllUsers)
 
 	//Handle `/send`
-	mux.HandleFunc("/send", server.Send)
+	mux.HandleFunc("/send", server.SaveSendMessages)
 
 	//Handle `/get`
-	mux.HandleFunc("/get", server.GetMsg)
+	mux.HandleFunc("/get", server.RespondtMessages)
 
 	//Start server
 	http.ListenAndServe(":80", mux)
+
 }

@@ -23,7 +23,7 @@ type SendUser struct {
 }
 
 //Respond registarion user
-func respondRegistration(user User) int {
+func respondToRegistration(user User) int {
 	//Convert struct to JSON type
 	postBody, _ := json.Marshal(user)
 
@@ -71,7 +71,7 @@ func testNewUsers() {
 
 	//Check Integration tests for registration
 	for i := 0; i < len(users); i++ {
-		if respondRegistration(users[i]) != answers[i] {
+		if respondToRegistration(users[i]) != answers[i] {
 			panic("ERROR!")
 		}
 	}
@@ -138,7 +138,7 @@ func sendMessageToServer(sendUser SendUser) int {
 }
 
 //Send Function Test
-func testSendMessage() {
+func testSendMessages() {
 
 	fmt.Println("\nIntegration Test For Send Message Start")
 
@@ -237,7 +237,7 @@ func main() {
 	testNewUsers()
 
 	//Check Integration tests for Send Message
-	testSendMessage()
+	testSendMessages()
 
 	//Check Integration tests for Get All Messages
 	testGetAllMessages()

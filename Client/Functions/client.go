@@ -24,7 +24,7 @@ type User struct {
 }
 
 //Create SendUser structure for save data about Sendler
-type SendUser struct {
+type SendData struct {
 	Sender   string `json:"sender"`
 	Reciever string `json:"reciever"`
 	Message  string `json:"message"`
@@ -90,7 +90,7 @@ func RegNewUser(user *User) {
 }
 
 //Registration a new user
-func Reg() {
+func Registration() {
 	//Create object type of RegUser
 	var user User
 
@@ -104,7 +104,7 @@ func Reg() {
 }
 
 //Get all users
-func GetAll() {
+func GetAllUsers() {
 	//Send get require
 	resp, err := http.Get("http://localhost:80/all")
 
@@ -131,30 +131,30 @@ func GetAll() {
 }
 
 //Send message
-func Send() {
+func SendMessage() {
 	//Create object of type SendUser
-	var sendUser SendUser
+	var sendData SendData
 
 	//Check user, we have current user or not
 	if CurrentUser == "" {
 		//Get the name user and save in server
-		Reg()
+		Registration()
 	} else {
 		//Set current user to sender
-		sendUser.Sender = CurrentUser
+		sendData.Sender = CurrentUser
 	}
 
 	//Get Reciever
 	fmt.Print("Input whom you want to send: ")
-	fmt.Scan(&sendUser.Reciever)
+	fmt.Scan(&sendData.Reciever)
 
 	//Get message for send
 	fmt.Print("Message: ")
 	inputReader := bufio.NewReader(os.Stdin)
-	sendUser.Message, _ = inputReader.ReadString('\n')
+	sendData.Message, _ = inputReader.ReadString('\n')
 
 	//Convert struct to json type
-	postBody, _ := json.Marshal(sendUser)
+	postBody, _ := json.Marshal(sendData)
 
 	//Convert to *bytes.Buffer and initialization
 	responseBody := bytes.NewBuffer(postBody)
@@ -184,14 +184,14 @@ func Send() {
 }
 
 //Get user message
-func GetMsg() {
+func GetAllUserMessages() {
 	//Create object of type User structure
 	var user User
 
 	//Check user, we have current user or not
 	if CurrentUser == "" {
 		//Get the name user
-		Reg()
+		Registration()
 	} else {
 		//Set current user to sender
 		user.Username = CurrentUser

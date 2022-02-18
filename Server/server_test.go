@@ -9,19 +9,19 @@ import (
 )
 
 //Create structure for Test Regisration
-type RegUser struct {
+type User struct {
 	User    string
 	Correct bool
 }
 
 //Create structure for Save Messages
-type SaveMsg struct {
+type SaveUserMsg struct {
 	SendMsg server.SendUser
 	Correct bool
 }
 
 //Create structure for Get Messages
-type GetMsg struct {
+type GetUserMsg struct {
 	SendMsg []server.SendUser
 	Correct []string
 }
@@ -31,7 +31,7 @@ func TestReg(t *testing.T) {
 
 	fmt.Println("REGISTRATION TESTING!")
 	//Tests
-	dataCorrect := []RegUser{
+	data := []User{
 		{User: "Abdulla", Correct: true},
 		{User: "Ulfat", Correct: true},
 		{User: "Andrey", Correct: true},
@@ -42,8 +42,8 @@ func TestReg(t *testing.T) {
 	}
 
 	//Check tests
-	for _, data := range dataCorrect {
-		assert.EqualValues(t, server.Reg(data.User), data.Correct, "INCORRECT!")
+	for _, i := range data {
+		assert.EqualValues(t, server.Reg(i.User), i.Correct, "INCORRECT!")
 	}
 
 	fmt.Println("OK!")
@@ -55,7 +55,7 @@ func TestSendMsg(t *testing.T) {
 	fmt.Println("SEND MESSAGES TESTING!")
 
 	//Tests
-	data := []SaveMsg{
+	data := []SaveUserMsg{
 		{
 			SendMsg: server.SendUser{"Abdulla", "Ulfat", "Hi! How are you?"},
 			Correct: true,
@@ -92,13 +92,13 @@ func TestGetMsg(t *testing.T) {
 	fmt.Println("GET MESSAGES TESTING!")
 
 	//Tests
-	data := GetMsg{
+	data := GetUserMsg{
 		SendMsg: []server.SendUser{
 			{"Abdulla", "Ulfat", "Hi! How are you?"},
 			{"Sasha", "Ulfat", "Hi! How are you?"},
 		},
 		Correct: []string{
-			"\nAbdulla: Hi! How are you?\n",
+			"Abdulla: Hi! How are you?\n",
 			"Sasha: Hi! How are you?\n",
 		},
 	}

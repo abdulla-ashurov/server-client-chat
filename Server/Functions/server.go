@@ -29,7 +29,7 @@ var users = map[string]uint{}
 var id uint = 1
 
 //Global map for save messages
-var messages = map[string][]SendUser{}
+var Messages = map[string][]SendUser{}
 
 //function registration
 func Reg(user string) bool {
@@ -45,7 +45,7 @@ func Reg(user string) bool {
 }
 
 //function registration
-func ResReg(res http.ResponseWriter, req *http.Request) {
+func RespondRegistration(res http.ResponseWriter, req *http.Request) {
 	//Create user type of RegUser
 	var user User
 
@@ -82,7 +82,7 @@ func PrintAll() string {
 }
 
 //Get all users
-func All(res http.ResponseWriter, req *http.Request) {
+func RespondAllUsers(res http.ResponseWriter, req *http.Request) {
 	//Transition a new line
 	res.Write([]byte("\n"))
 
@@ -95,12 +95,13 @@ func All(res http.ResponseWriter, req *http.Request) {
 
 }
 
+//Save User Messages in Map
 func SaveMsg(sendUser *SendUser) bool {
 	//Check user we have or haven't
 	if sendUser.Message == "" {
 		return false
 	} else if _, ok := users[sendUser.Reciever]; ok {
-		messages[sendUser.Reciever] = append(messages[sendUser.Reciever], *sendUser)
+		Messages[sendUser.Reciever] = append(Messages[sendUser.Reciever], *sendUser)
 		return true
 	} else {
 
@@ -109,7 +110,7 @@ func SaveMsg(sendUser *SendUser) bool {
 }
 
 //Send message
-func Send(res http.ResponseWriter, req *http.Request) {
+func SaveSendMessages(res http.ResponseWriter, req *http.Request) {
 	//Create object of type SendUser
 	var sendUser SendUser
 
@@ -147,7 +148,7 @@ func GetMessages(recievers []SendUser) string {
 }
 
 //Get user Message
-func GetMsg(res http.ResponseWriter, req *http.Request) {
+func RespondtMessages(res http.ResponseWriter, req *http.Request) {
 	//Create object of type User
 	var user User
 
@@ -162,7 +163,7 @@ func GetMsg(res http.ResponseWriter, req *http.Request) {
 	}
 
 	//Create array of type []SendUser
-	if value, ok := messages[user.Username]; ok {
+	if value, ok := Messages[user.Username]; ok {
 		res.WriteHeader(http.StatusOK)
 		res.Write([]byte(GetMessages(value)))
 	} else {

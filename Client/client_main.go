@@ -21,17 +21,17 @@ func main() {
 
 		case "reg":
 			//Registration user
-			client.Reg()
+			client.Registration()
 		case "all":
 			//Print all users
-			client.GetAll()
+			client.GetAllUsers()
 		case "send":
 			//Send message to some user
-			client.Send()
+			client.SendMessage()
 
 		case "get":
 			//Get all my messages
-			client.GetMsg()
+			client.GetAllUserMessages()
 		case "exit":
 			//Close the program
 			fmt.Println("Good Bye! See you soon...")
