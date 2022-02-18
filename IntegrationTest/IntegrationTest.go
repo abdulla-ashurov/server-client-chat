@@ -7,6 +7,8 @@ import (
 	"net/http"
 )
 
+var address string = "http://localhost:80/"
+
 //Create User structure for save data about registration user
 //We have one field -> username
 type User struct {
@@ -29,7 +31,7 @@ func respondRegistration(user User) int {
 	responseBody := bytes.NewBuffer(postBody)
 
 	//Integration test  for Registration User
-	resp, err := http.Post("http://localhost:80/reg", "application/json", responseBody)
+	resp, err := http.Post(address+"reg", "application/json", responseBody)
 
 	//Check require
 	if err != nil {
@@ -83,7 +85,7 @@ func testNewUsers() {
 	fmt.Println("Integration Test For Get All Users Start")
 
 	//Send get require
-	resp, err := http.Get("http://localhost:80/all")
+	resp, err := http.Get(address+"all")
 
 	//Check require
 	if err != nil {
@@ -114,7 +116,7 @@ func sendMessageToServer(sendUser SendUser) int {
 	responseBody := bytes.NewBuffer(postBody)
 
 	//Send request to server
-	resp, err := http.Post("http://localhost:80/send", "application/json", responseBody)
+	resp, err := http.Post(address+"send", "application/json", responseBody)
 
 	//Check request
 	if err != nil {
@@ -182,7 +184,7 @@ func GetAllMessages(user User) int {
 	responseBody := bytes.NewBuffer(postBody)
 
 	//Send request to server
-	resp, err := http.Post("http://localhost:80/get", "application/json", responseBody)
+	resp, err := http.Post(address+"get", "application/json", responseBody)
 
 	//Check require
 	if err != nil {
