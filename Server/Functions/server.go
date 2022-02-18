@@ -34,7 +34,7 @@ var messages = map[string][]SendUser{}
 //function registration
 func Reg(user string) bool {
 	//Check we have this user or haven't
-	if _, ok := users[user]; ok{
+	if _, ok := users[user]; ok || user == "" {
 		return false
 	} else {
 		//Save a new user in Map
@@ -97,7 +97,9 @@ func All(res http.ResponseWriter, req *http.Request) {
 
 func SaveMsg(sendUser *SendUser) bool {
 	//Check user we have or haven't
-	if _, ok := users[sendUser.Reciever]; ok {
+	if sendUser.Message == "" {
+		return false
+	} else if _, ok := users[sendUser.Reciever]; ok {
 		messages[sendUser.Reciever] = append(messages[sendUser.Reciever], *sendUser)
 		return true
 	} else {
@@ -132,7 +134,7 @@ func GetMessages(recievers []SendUser) string {
 	//Check we have messages or not
 	msg := ""
 	if len(recievers) > 0 {
-		msg += "\n"
+		//msg += "\n"
 		//Respond all messages
 		for i := 0; i < len(recievers); i++ {
 			msg += recievers[i].Sender + ": " + recievers[i].Message + "\n"
