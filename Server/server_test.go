@@ -95,6 +95,7 @@ func TestSendMessageToRegistreteUsers(t *testing.T) {
 		{"Sasha", "Dasha", "Hi! How are you?"},
 		{"Dasha", "Sasha", "I'm fine and you?"},
 		{"Sasha", "Dasha", "Me too!"},
+		{"Abdulla", "Sasha", "Hi!"},
 	}
 
 	//Check tests
@@ -102,4 +103,22 @@ func TestSendMessageToRegistreteUsers(t *testing.T) {
 		assert.EqualValues(t, server.SaveUserMessage(&value), true, "INCORRECT!")
 	}
 
+}
+
+//Checking send messages to Unregistrated users
+func TestSendMessageToUnRegistrateUsers(t *testing.T) {
+	//Tests
+	tests := []server.SendUser{
+		{"Abdulla", "Nobody", "Hi! How are you?"},
+		{"Ulfat", "Nobody", "I'm fine and you?"},
+		{"Abdulla", "Ulfat", ""},
+		{"R", "Abdulla", "Hello!"},
+		{"Abdulla", " ", "     "},
+		{"F", "D", "He"},
+	}
+
+	//Check tests
+	for _, value := range tests {
+		assert.EqualValues(t, server.SaveUserMessage(&value), false, "INCORRECT!")
+	}
 }

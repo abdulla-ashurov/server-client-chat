@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"strings"
 )
 
@@ -86,18 +87,59 @@ func GetAllUsersName() string {
 	return allUsers
 }
 
+func indexBeginSpacestoLetter(message string) int {
+	for i := 0; i < len(message); i++ {
+		if message[i] != ' ' {
+			return i + 1
+		}
+	}
+	return -1
+}
+
+func ignoreBeginSpace(message string) string {
+
+	newCorrectMessage := ""
+	begin := indexBeginSpacestoLetter(message)
+	if begin != -1 {
+		for i := indexBeginSpacestoLetter(message); i < len(message); i++ {
+			newCorrectMessage += string(message[i])
+		}
+		fmt.Println(newCorrectMessage)
+		return newCorrectMessage
+	}
+	return ""
+}
+
 //Save User Messages in Map
 func SaveUserMessage(sendUser *SendUser) bool {
-	//Check user we have or haven't
+
+	//Check we have message or haven't
+	if len(sendUser.Message) == 0 {
+		return false
+	}
+
+	//Check we have correct message or haven't: "    " -> ignore, "    hello world!" -> get only "hello world!"
+	if sendUser.Message[0] == ' ' {
+		sendUser.Message = ignoreBeginSpace(sendUser.Message)
+	}
+
+	//Check we have message or haven't
 	if sendUser.Message == "" {
 		return false
 	} else {
+		//Check we have sender or haven't
 		for _, i := range Users {
-			if i == sendUser.Reciever {
-				messages[sendUser.Reciever] = append(messages[sendUser.Reciever], *sendUser)
-				return true
+			if i == sendUser.Sender {
+				//Check we have reciever or haven't
+				for _, i := range Users {
+					if i == sendUser.Reciever {
+						messages[sendUser.Reciever] = append(messages[sendUser.Reciever], *sendUser)
+						return true
+					}
+				}
 			}
 		}
+
 	}
 	return false
 }
