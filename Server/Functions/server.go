@@ -149,15 +149,23 @@ func SaveUserMessage(sendUser *SendUser) bool {
 }
 
 func GetUserMessages(reciever string) string {
-	//Check we have messages or not
-	msg := ""
-	if sender, ok := messages[reciever]; ok {
-		for _, i := range sender {
-			msg += i.Sender + ": " + i.Message + "\n"
+
+	//Check we have user or haven't
+	for i := 0; i < len(Users); i++ {
+		if Users[i] == reciever {
+			//Check we have messages or not
+			msg := ""
+			if sender, ok := messages[reciever]; ok {
+				for _, i := range sender {
+					msg += i.Sender + ": " + i.Message + "\n"
+				}
+				return msg
+			} else {
+				msg = "Empty"
+				return msg
+			}
 		}
-		return msg
-	} else {
-		msg = "Empty"
-		return msg
 	}
+
+	return "Error!"
 }

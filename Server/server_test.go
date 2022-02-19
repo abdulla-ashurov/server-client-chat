@@ -138,6 +138,7 @@ func TestGetRegistratedUserMessages(t *testing.T) {
 		{Username: "Tom"},
 		{Username: "John"},
 		{Username: "Alfred"},
+		{Username: "Anna"},
 	}
 
 	//Registrate new users
@@ -163,6 +164,14 @@ func TestGetRegistratedUserMessages(t *testing.T) {
 				"John: Hi! How are you?",
 				"Alfred: Me too!"},
 		},
+		{
+			SendMsg: []server.SendUser{
+				{"John", "Anna", "Hi! How are you?"},
+				{"Alfred", "Anna", "Me too!"}},
+			Correct: []string{
+				"John: Hi! How are you?",
+				"Alfred: Me too!"},
+		},
 	}
 
 	//Save Users messages
@@ -175,12 +184,30 @@ func TestGetRegistratedUserMessages(t *testing.T) {
 	for i := 0; i < len(tests); i++ {
 
 		correct := ""
-		for j := 0; j < len(tests[i].Correct[i]); j++ {
+		for j := 0; j < len(tests[i].Correct); j++ {
 			correct += tests[i].Correct[j] + "\n"
 		}
 
 		//Check tests
 		assert.Equal(t, server.GetUserMessages(tests[i].SendMsg[0].Reciever), correct, "INCORRECT!")
 	}
+}
 
+//Checking get Unregistrated user messages
+func TestGetUnRegistratedUserMessages(t *testing.T) {
+
+	//Tests
+	tests := []server.SendUser{
+		{"Abdulla", "F", "Hi! How are you?"},
+		{"Ulfat", "F", "I'm fine and you?"},
+		{"Abdulla", "F", ""},
+		{"R", "F", "Hello!"},
+		{"Abdulla", " ", "     "},
+		{"F", "D", "He"},
+	}
+
+	for _, user := range tests {
+		//Check tests
+		assert.Equal(t, server.GetUserMessages(user.Reciever), "Error!", "INCORRECT!")
+	}
 }
