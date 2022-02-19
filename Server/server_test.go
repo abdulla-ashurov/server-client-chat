@@ -2,115 +2,66 @@ package main
 
 import (
 	server "Chat_Server_Client/server/Functions"
-	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-//Create structure for Test Regisration
-type User struct {
-	User    string
-	Correct bool
-}
-
-//Create structure for Save Messages
-type SaveUserMsg struct {
-	SendMsg server.SendUser
-	Correct bool
-}
-
-//Create structure for Get Messages
-type GetUserMsg struct {
-	SendMsg []server.SendUser
-	Correct []string
-}
-
-//Registraion Test
-func TestReg(t *testing.T) {
-
-	fmt.Println("REGISTRATION TESTING!")
-	//Tests
-	data := []User{
-		{User: "Abdulla", Correct: true},
-		{User: "Ulfat", Correct: true},
-		{User: "Andrey", Correct: true},
-		{User: "Sasha", Correct: true},
-		{User: "Abdulla", Correct: false},
-		{User: "Ulfat", Correct: false},
-		{User: "", Correct: false},
-	}
-
-	//Check tests
-	for _, i := range data {
-		assert.EqualValues(t, server.Reg(i.User), i.Correct, "INCORRECT!")
-	}
-
-	fmt.Println("OK!")
-}
-
-//Test for Send Messages
-func TestSendMsg(t *testing.T) {
-
-	fmt.Println("SEND MESSAGES TESTING!")
+//Checking Unregistrate Users to sign up
+func TestUnregistrateUsers(t *testing.T) {
 
 	//Tests
-	data := []SaveUserMsg{
-		{
-			SendMsg: server.SendUser{"Abdulla", "Ulfat", "Hi! How are you?"},
-			Correct: true,
-		},
-		{
-			SendMsg: server.SendUser{"Ulfat", "Abdulla", "Hi! How are you?"},
-			Correct: true,
-		},
-		{
-			SendMsg: server.SendUser{"Abdulla", "Roma", "Hi! How are you?"},
-			Correct: false,
-		},
-		{
-			SendMsg: server.SendUser{"Ulfat", "U", "Hi! How are you?"},
-			Correct: false,
-		},
-		{
-			SendMsg: server.SendUser{"Ulfat", "Ukljkljk", ""},
-			Correct: false,
-		},
+	tests := []server.User{
+		{Username: "Abdulla"},
+		{Username: "Ulfat"},
+		{Username: "Andrey"},
+		{Username: "Artur"},
+		{Username: "Dasha"},
+		{Username: "Sasha"},
+		{Username: "S "},
 	}
 
-	//Check tests
-	for _, value := range data {
-		assert.EqualValues(t, server.SaveMsg(&value.SendMsg), value.Correct, "INCORRECT!")
+	//Check correct Tests
+	for _, user := range tests {
+		assert.EqualValues(t, server.CheckRegistration(user.Username), true, "INCORRECT!")
 	}
-
-	fmt.Println("OK!")
 }
 
-//Test for Get Messages
-func TestGetMsg(t *testing.T) {
+//Checking Registrated Users to sign up
+func TestRegistrateUsers(t *testing.T) {
 
-	fmt.Println("GET MESSAGES TESTING!")
-
-	//Tests
-	data := GetUserMsg{
-		SendMsg: []server.SendUser{
-			{"Abdulla", "Ulfat", "Hi! How are you?"},
-			{"Sasha", "Ulfat", "Hi! How are you?"},
-		},
-		Correct: []string{
-			"Abdulla: Hi! How are you?\n",
-			"Sasha: Hi! How are you?\n",
-		},
+	//Correct Tests
+	tests := []server.User{
+		{Username: "Abdulla"},
+		{Username: "Ulfat"},
+		{Username: "Andrey"},
+		{Username: "Artur"},
+		{Username: "Dasha"},
+		{Username: "Sasha"},
 	}
 
-	correct := ""
-	for i := 0; i < len(data.Correct); i++ {
-		correct += data.Correct[i]
+	//Registrate new users
+	for _, user := range tests {
+		server.CheckRegistration(user.Username)
 	}
 
-	//Check tests
-	assert.Equal(t, server.GetMessages(data.SendMsg), correct, "INCORRECT!")
+	//Incorrect Tests
+	incorrectTests := []server.User{
+		{Username: "Abdulla"},
+		{Username: "Ulfat"},
+		{Username: "Andrey"},
+		{Username: "Artur"},
+		{Username: "Dasha"},
+		{Username: "Sasha"},
+		{Username: ""},
+		{Username: " "},
+		{Username: " Gosha"},
+		{Username: "    "},
+		{Username: "Abdulla "},
+	}
 
-	fmt.Println("OK!")
-
+	//Check incorrect users
+	for _, user := range incorrectTests {
+		assert.EqualValues(t, server.CheckRegistration(user.Username), false, "INCORRECT!")
+	}
 }
