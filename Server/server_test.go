@@ -65,3 +65,41 @@ func TestRegistrateUsers(t *testing.T) {
 		assert.EqualValues(t, server.CheckRegistration(user.Username), false, "INCORRECT!")
 	}
 }
+
+//Checking send messages registreted users
+func TestSendMessageToRegistreteUsers(t *testing.T) {
+
+	//Registrate users
+	users := []server.User{
+		{Username: "Abdulla"},
+		{Username: "Ulfat"},
+		{Username: "Andrey"},
+		{Username: "Artur"},
+		{Username: "Dasha"},
+		{Username: "Sasha"},
+	}
+
+	//Registrate new users
+	for _, user := range users {
+		server.CheckRegistration(user.Username)
+	}
+
+	//Tests
+	tests := []server.SendUser{
+		{"Abdulla", "Ulfat", "Hi! How are you?"},
+		{"Ulfat", "Abdulla", "I'm fine and you?"},
+		{"Abdulla", "Ulfat", "Me too!"},
+		{"Andrey", "Artur", "Hi! How are you?"},
+		{"Artur", "Andrey", "I'm fine and you?"},
+		{"Andrey", "Artur", "Me too!"},
+		{"Sasha", "Dasha", "Hi! How are you?"},
+		{"Dasha", "Sasha", "I'm fine and you?"},
+		{"Sasha", "Dasha", "Me too!"},
+	}
+
+	//Check tests
+	for _, value := range tests {
+		assert.EqualValues(t, server.SaveUserMessage(&value), true, "INCORRECT!")
+	}
+
+}
