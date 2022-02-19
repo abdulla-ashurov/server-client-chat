@@ -113,6 +113,10 @@ func ignoreBeginSpace(message string) string {
 //Save User Messages in Map
 func SaveUserMessage(sendUser *SendUser) bool {
 
+	if len(sendUser.Message) > 200 {
+		return false
+	}
+
 	//Check we have message or haven't
 	if len(sendUser.Message) == 0 {
 		return false

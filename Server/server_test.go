@@ -115,6 +115,7 @@ func TestSendMessageToUnRegistrateUsers(t *testing.T) {
 		{"R", "Abdulla", "Hello!"},
 		{"Abdulla", " ", "     "},
 		{"F", "D", "He"},
+		{"Abdulla", "Ulfat", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In vulputate mi commodo tortor aliquam consectetur. Vivamus fermentum sit amet mi a venenatis. Proin ut commodo nulla. Suspendisse pretium pharetra."},
 	}
 
 	//Check tests
