@@ -198,7 +198,10 @@ func TestIntegrationSendMessageToUnRegistrateUsers(t *testing.T) {
 	}
 }
 
-func GetAllUserMessages(user User) int {
+func GetAllUserMessages(name string) int {
+
+	var user User
+	user.Username = name
 
 	//Convert struct to JSON type
 	postBody, _ := json.Marshal(user)
@@ -225,5 +228,75 @@ func GetAllUserMessages(user User) int {
 	}
 
 	return resp.StatusCode
+
+}
+
+func TestIntegrationGetAllRegistrateUserMessages(t *testing.T) {
+
+	data := []User{
+		{"Abdulla"},
+		{"Ulfat"},
+		{"Kim"},
+		{"Chin"},
+		{"In"},
+		{"GoLang"},
+	}
+
+	for _, user := range data {
+		respondToRegistration(user)
+	}
+
+	//Tests
+	messages := []SendUser{
+		{"Abdulla", "Ulfat", "Hi! How are you?"},
+		{"Ulfat", "Abdulla", "I'm fine and you?"},
+		{"Abdulla", "Ulfat", "Me too!"},
+		{"Andrey", "Artur", "Hi! How are you?"},
+		{"Artur", "Andrey", "I'm fine and you?"},
+		{"Andrey", "Artur", "Me too!"},
+		{"Sasha", "Dasha", "Hi! How are you?"},
+		{"Dasha", "Sasha", "I'm fine and you?"},
+		{"Sasha", "Dasha", "Me too!"},
+		{"Abdulla", "Sasha", "Hi!"},
+	}
+
+	//Check tests
+	for _, value := range messages {
+		sendMessageToServer(value)
+	}
+
+	for _, value := range messages {
+		assert.EqualValues(t, GetAllUserMessages(value.Reciever), http.StatusOK, "ERROR!")
+	}
+
+}
+
+func TestIntegrationGetAllUnregistrateUserMessages(t *testing.T) {
+
+	data := []User{
+		{"Abdulla"},
+		{"Ulfat"},
+		{"Kim"},
+		{"Chin"},
+		{"In"},
+		{"GoLang"},
+	}
+
+	for _, user := range data {
+		respondToRegistration(user)
+	}
+
+	//Tests
+	messages := []User{
+		{"H"},
+		{"G"},
+		{"K"},
+		{"     "},
+		{""},
+	}
+
+	for _, value := range messages {
+		assert.EqualValues(t, GetAllUserMessages(value.Username), http.StatusBadRequest, "ERROR!")
+	}
 
 }
