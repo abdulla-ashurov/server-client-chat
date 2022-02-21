@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"strings"
 )
 
@@ -87,29 +86,6 @@ func GetAllUsersName() string {
 	return allUsers
 }
 
-func indexBeginSpacestoLetter(message string) int {
-	for i := 0; i < len(message); i++ {
-		if message[i] != ' ' {
-			return i + 1
-		}
-	}
-	return -1
-}
-
-func ignoreBeginSpace(message string) string {
-
-	newCorrectMessage := ""
-	begin := indexBeginSpacestoLetter(message)
-	if begin != -1 {
-		for i := indexBeginSpacestoLetter(message); i < len(message); i++ {
-			newCorrectMessage += string(message[i])
-		}
-		fmt.Println(newCorrectMessage)
-		return newCorrectMessage
-	}
-	return ""
-}
-
 //Save User Messages in Map
 func SaveUserMessage(sendUser *SendUser) bool {
 
@@ -124,7 +100,7 @@ func SaveUserMessage(sendUser *SendUser) bool {
 
 	//Check we have correct message or haven't: "    " -> ignore, "    hello world!" -> get only "hello world!"
 	if sendUser.Message[0] == ' ' {
-		sendUser.Message = ignoreBeginSpace(sendUser.Message)
+		sendUser.Message = strings.TrimLeft(sendUser.Message, " ")
 	}
 
 	//Check we have message or haven't
