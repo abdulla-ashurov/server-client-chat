@@ -119,10 +119,10 @@ func SaveUserMessage(sendUser *SendUser) bool {
 	return false
 }
 
-func GetUserMessages(reciever string) []string {
+func GetUserMessages(reciever string) []SendUser {
 
 	//Create slice
-	var userMessages []string
+	var userMessages []SendUser
 
 	//Check we have user or haven't
 	for i := 0; i < len(Users); i++ {
@@ -130,7 +130,7 @@ func GetUserMessages(reciever string) []string {
 			//Check we have messages or not
 			if sender, ok := messages[reciever]; ok {
 				for _, i := range sender {
-					msg := i.Sender + ": " + i.Message
+					msg := SendUser{i.Sender, i.Reciever, i.Message}
 					userMessages = append(userMessages, msg)
 				}
 				return userMessages

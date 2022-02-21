@@ -176,6 +176,11 @@ func TestIntegrationSendMessageToRegistreteUsers(t *testing.T) {
 	for _, value := range tests {
 		assert.EqualValues(t, sendMessageToServer(value), http.StatusOK, "INCORRECT!")
 	}
+
+	//Check order user messages
+	/*for _, value := range tests {
+		assert.EqualValues(t, server.ge)
+	}*/
 }
 
 //Checking send messages to Unregistrated users

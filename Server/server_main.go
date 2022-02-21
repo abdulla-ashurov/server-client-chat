@@ -91,7 +91,7 @@ func RespondtMessages(res http.ResponseWriter, req *http.Request) {
 		userMessages := server.GetUserMessages(value[0].Reciever)
 
 		for i := 0; i < len(userMessages); i++ {
-			res.Write([]byte(userMessages[i]))
+			res.Write([]byte(userMessages[i].Message))
 		}
 	} else {
 		res.WriteHeader(http.StatusBadRequest)

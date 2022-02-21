@@ -92,20 +92,21 @@ func TestSendMessageToRegistreteUsers(t *testing.T) {
 	//Tests
 	tests := []server.SendUser{
 		{"Abdulla", "Ulfat", "Hi! How are you?"},
-		{"Ulfat", "Abdulla", "I'm fine and you?"},
 		{"Abdulla", "Ulfat", "Me too!"},
-		{"Andrey", "Artur", "Hi! How are you?"},
-		{"Artur", "Andrey", "I'm fine and you?"},
-		{"Andrey", "Artur", "Me too!"},
-		{"Sasha", "Dasha", "Hi! How are you?"},
-		{"Dasha", "Sasha", "I'm fine and you?"},
-		{"Sasha", "Dasha", "Me too!"},
-		{"Abdulla", "Sasha", "Hi!"},
+		{"Andrey", "Ulfat", "Hi! How are you?"},
+		{"Artur", "Ulfat", "I'm fine and you?"},
+		{"Andrey", "Ulfat", "Me too!"},
 	}
 
 	//Check tests
 	for _, value := range tests {
 		assert.EqualValues(t, server.SaveUserMessage(&value), true, "INCORRECT!")
+
+	}
+
+	userMessages := server.GetUserMessages(tests[0].Reciever)
+	for i := 0; i < len(userMessages); i++ {
+		assert.EqualValues(t, tests[i], userMessages[i], "INCORRECT!")
 	}
 
 }
@@ -153,24 +154,24 @@ func TestGetRegistratedUserMessages(t *testing.T) {
 				{"Tom", "John", "Hi! How are you?"},
 				{"Alfred", "John", "Me too!"}},
 			Correct: []string{
-				"Tom: Hi! How are you?",
-				"Alfred: Me too!"},
+				"Hi! How are you?",
+				"Me too!"},
 		},
 		{
 			SendMsg: []server.SendUser{
 				{"John", "Tom", "Hi! How are you?"},
 				{"Alfred", "Tom", "Me too!"}},
 			Correct: []string{
-				"John: Hi! How are you?",
-				"Alfred: Me too!"},
+				"Hi! How are you?",
+				"Me too!"},
 		},
 		{
 			SendMsg: []server.SendUser{
 				{"John", "Anna", "Hi! How are you?"},
 				{"Alfred", "Anna", "Me too!"}},
 			Correct: []string{
-				"John: Hi! How are you?",
-				"Alfred: Me too!"},
+				"Hi! How are you?",
+				"Me too!"},
 		},
 	}
 
@@ -187,7 +188,7 @@ func TestGetRegistratedUserMessages(t *testing.T) {
 
 		for j := 0; j < len(tests[i].Correct); j++ {
 			//Check tests
-			assert.Equal(t, userMessages[j], tests[i].Correct[j], "INCORRECT!")
+			assert.Equal(t, userMessages[j].Message, tests[i].Correct[j], "INCORRECT!")
 		}
 	}
 }
@@ -208,6 +209,7 @@ func TestGetUnRegistratedUserMessages(t *testing.T) {
 	for i := 0; i < len(tests); i++ {
 
 		userMessages := server.GetUserMessages(tests[i].Reciever)
+
 		//Check tests
 		for j := 0; j < len(userMessages); j++ {
 			//Check tests
