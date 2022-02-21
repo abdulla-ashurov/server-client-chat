@@ -76,14 +76,8 @@ func CheckRegistration(user string) bool {
 }
 
 //Return all users
-func GetAllUsersName() string {
-	//Save all users in string variable
-	allUsers := ""
-	for _, user := range Users {
-		allUsers += user
-	}
-
-	return allUsers
+func GetAllUsersName() []string {
+	return Users
 }
 
 //Save User Messages in Map
@@ -114,6 +108,7 @@ func SaveUserMessage(sendUser *SendUser) bool {
 				for _, i := range Users {
 					if i == sendUser.Reciever {
 						messages[sendUser.Reciever] = append(messages[sendUser.Reciever], *sendUser)
+						//fmt.Println(messages[sendUser.Reciever])
 						return true
 					}
 				}
@@ -124,24 +119,25 @@ func SaveUserMessage(sendUser *SendUser) bool {
 	return false
 }
 
-func GetUserMessages(reciever string) string {
+func GetUserMessages(reciever string) []string {
+
+	//Create slice
+	var userMessages []string
 
 	//Check we have user or haven't
 	for i := 0; i < len(Users); i++ {
 		if Users[i] == reciever {
 			//Check we have messages or not
-			msg := ""
 			if sender, ok := messages[reciever]; ok {
 				for _, i := range sender {
-					msg += i.Sender + ": " + i.Message + "\n"
+					msg := i.Sender + ": " + i.Message
+					userMessages = append(userMessages, msg)
 				}
-				return msg
+				return userMessages
 			} else {
-				msg = "Empty"
-				return msg
+				return userMessages
 			}
 		}
 	}
-
-	return "Error!"
+	return userMessages
 }

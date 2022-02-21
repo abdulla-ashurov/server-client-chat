@@ -183,13 +183,12 @@ func TestGetRegistratedUserMessages(t *testing.T) {
 
 	for i := 0; i < len(tests); i++ {
 
-		correct := ""
-		for j := 0; j < len(tests[i].Correct); j++ {
-			correct += tests[i].Correct[j] + "\n"
-		}
+		userMessages := server.GetUserMessages(tests[i].SendMsg[0].Reciever)
 
-		//Check tests
-		assert.Equal(t, server.GetUserMessages(tests[i].SendMsg[0].Reciever), correct, "INCORRECT!")
+		for j := 0; j < len(tests[i].Correct); j++ {
+			//Check tests
+			assert.Equal(t, userMessages[j], tests[i].Correct[j], "INCORRECT!")
+		}
 	}
 }
 
@@ -206,8 +205,13 @@ func TestGetUnRegistratedUserMessages(t *testing.T) {
 		{"F", "D", "He"},
 	}
 
-	for _, user := range tests {
+	for i := 0; i < len(tests); i++ {
+
+		userMessages := server.GetUserMessages(tests[i].Reciever)
 		//Check tests
-		assert.Equal(t, server.GetUserMessages(user.Reciever), "Error!", "INCORRECT!")
+		for j := 0; j < len(userMessages); j++ {
+			//Check tests
+			assert.Equal(t, userMessages[j], tests[i].Message, "INCORRECT!")
+		}
 	}
 }

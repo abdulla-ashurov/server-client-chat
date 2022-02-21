@@ -38,7 +38,10 @@ func RespondAllUsers(res http.ResponseWriter, req *http.Request) {
 
 	//If we haven't any one, we print message about it
 	if len(server.Users) > 0 {
-		res.Write([]byte(server.GetAllUsersName()))
+		userNames := server.GetAllUsersName()
+		for _, name := range userNames {
+			res.Write([]byte(name))
+		}
 	} else {
 		res.WriteHeader(http.StatusBadRequest)
 	}
@@ -85,7 +88,11 @@ func RespondtMessages(res http.ResponseWriter, req *http.Request) {
 	//Create array of type []SendUser
 	if value, ok := server.IsExist(user.Username); ok {
 		res.WriteHeader(http.StatusOK)
-		res.Write([]byte(server.GetUserMessages(value[0].Reciever)))
+		userMessages := server.GetUserMessages(value[0].Reciever)
+
+		for i := 0; i < len(userMessages); i++ {
+			res.Write([]byte(userMessages[i]))
+		}
 	} else {
 		res.WriteHeader(http.StatusBadRequest)
 	}
